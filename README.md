@@ -1,44 +1,15 @@
-Here is a clean, professional `README.md` file you can use for your GitHub repository. It explains what the code does, the logic behind BFS, and how to run it.
 
 ---
 
-# Breadth-First Search (BFS) City Map Traversal
+# 🗺️ Graph Traversal Algorithms: BFS & DFS
 
-This repository contains a Python implementation of the **Breadth-First Search (BFS)** algorithm. In this example, the algorithm is used to traverse a "City Map" represented as an adjacency list (graph).
+This repository contains Python implementations of the two fundamental graph traversal algorithms: **Breadth-First Search (BFS)** and **Depth-First Search (DFS)**. These examples use a "City Map" represented as an adjacency list to demonstrate how each algorithm navigates through intersections and roads.
 
-## 📌 Overview
+## 🏗️ The City Map (Graph Structure)
 
-Breadth-First Search is an algorithm for traversing or searching tree or graph data structures. It starts at a specific node (the "root" or "source") and explores all neighbor nodes at the present depth prior to moving on to the nodes at the next depth level.
-
-### The City Map Graph
-
-The code uses the following graph structure:
-
-* **Nodes:** Represent intersections (A, B, C, D, E, F, G).
-* **Edges:** Represent the roads connecting these intersections.
-
----
-
-## 🚀 How It Works
-
-The traversal follows these steps:
-
-1. **Queue Initialization:** Start by adding the initial city (e.g., 'A') to a `deque`.
-2. **Tracking:** Use a `set` called `visited` to keep track of intersections already explored to avoid infinite loops.
-3. **Level-by-Level Exploration:** * Pop the first item from the queue.
-* If it hasn't been visited, mark it as visited.
-* Add all its unvisited neighbors to the end of the queue.
-
-
-
----
-
-## 💻 Code Snippet
+Both algorithms operate on the following graph, where keys are intersections and values are lists of connected neighbors:
 
 ```python
-from collections import deque
-
-# Graph representation
 City_Map = {
     'A' : ['B' ,'C'],
     'B' : ['A', 'D', 'E'],
@@ -49,36 +20,73 @@ City_Map = {
     'G' : ['C']
 }
 
-def city_map_traversal(City_Map, start):
+```
+
+---
+
+## 🌊 1. Breadth-First Search (BFS)
+
+BFS explores the map **level-by-level**. It visits all immediate neighbors of the starting point before moving to the next "layer" of cities.
+
+* **Mechanism:** Uses a **Queue** (First-In, First-Out).
+* **Best For:** Finding the shortest path in unweighted graphs.
+* **Traversal Order:** `A → B → C → D → E → F → G`
+
+### BFS Implementation
+
+```python
+from collections import deque
+
+def city_map_traversal_bfs(city_map, start):
     visited = set()
     queue = deque([start])
     
-    print("Breadth First Search Traversal:")
     while queue:
         intersection = queue.popleft()
         if intersection not in visited:
             print(intersection, end=" ")
             visited.add(intersection)
-            
-            for neighbour in City_Map[intersection]:
-                if neighbour not in visited:
-                    queue.append(neighbour)
-
-# Execute
-city_map_traversal(City_Map, 'A')
+            for neighbor in city_map[intersection]:
+                if neighbor not in visited:
+                    queue.append(neighbor)
 
 ```
 
 ---
 
-## 📊 Expected Output
+## 🌲 2. Depth-First Search (DFS)
 
-When starting from city **'A'**, the traversal order will be:
-`A B C D E F G `
+DFS explores the map **branch-by-branch**. It dives as deep as possible down one path before backtracking to explore alternative routes.
 
-> **Note:** BFS is particularly useful for finding the shortest path in unweighted graphs because it explores all nodes at distance  before moving to distance .
+* **Mechanism:** Uses **Recursion** (or a Stack).
+* **Best For:** Pathfinding, topological sorting, and solving puzzles.
+* **Traversal Order:** `A → B → D → E → C → F → G`
+
+### DFS Implementation
+
+```python
+def city_map_traversal_dfs(city_map, start, visited=None):
+    if visited is None:
+        visited = set()
+
+    print(start, end=" ")
+    visited.add(start)
+
+    for neighbor in city_map[start]:
+        if neighbor not in visited:
+            city_map_traversal_dfs(city_map, neighbor, visited)
+
+```
 
 ---
 
-Would you like me to help you write a `requirements.txt` file or a `.gitignore` to go along with this?
+## ⚖️ Comparison Summary
 
+| Feature | BFS (Breadth-First) | DFS (Depth-First) |
+| --- | --- | --- |
+| **Data Structure** | Queue (FIFO) | Stack (LIFO) or Recursion |
+| **Strategy** | Wide (Horizontal) | Deep (Vertical) |
+| **Memory** | Higher for wide graphs | Higher for deep graphs |
+| **Use Case** | Shortest path | Completeness/Exhaustive search |
+
+---
